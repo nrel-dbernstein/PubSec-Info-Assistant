@@ -502,3 +502,22 @@ export async function getFeatureFlags(): Promise<GetFeatureFlagsResponse> {
     console.log(parsedResponse);
     return parsedResponse;
 }
+export async function fetchSpeechConfig(): Promise<{ token: string, region: string, languages: string[]; }> {
+    try {
+        const response = await fetch("/api/speech",  {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json"
+            }
+        });
+
+        if (!response.ok) {
+            console.error("Error fetching speech config:", response);
+            throw new Error("Network response was not ok");
+        }
+        return response.json();
+    } catch (error) {
+        console.error("Error fetching server configuration:", error);
+        throw error;
+    }
+}
