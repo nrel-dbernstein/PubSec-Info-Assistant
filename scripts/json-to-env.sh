@@ -118,6 +118,18 @@ jq -r  '
         {
             "path": "MAX_CSV_FILE_SIZE",
             "env_var": "MAX_CSV_FILE_SIZE"
+        },
+        {
+            "path": "AZURE_SPEECH_KEY",
+            "env_var": "AZURE_SPEECH_KEY"
+        },
+        {
+            "path": "AZURE_SPEECH_REGION",
+            "env_var": "AZURE_SPEECH_REGION"
+        },
+        {
+            "path": "AZURE_SPEECH_LANGUAGES",
+            "env_var": "AZURE_SPEECH_LANGUAGES"
         }
     ]
         as $env_vars_to_extract

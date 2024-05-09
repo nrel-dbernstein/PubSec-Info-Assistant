@@ -1,8 +1,11 @@
 {
   "dependencies": {
     "@fluentui/react-northstar": "^0.66.5",
+    "@fortawesome/free-solid-svg-icons": "^6.5.2",
+    "@fortawesome/react-fontawesome": "^0.2.0",
     "dataframe-js": "^1.4.4",
     "dotenv": "^16.4.5",
+    "microsoft-cognitiveservices-speech-sdk": "^1.36.0",
     "papaparse": "^5.4.1",
     "react-markdown": "^6.0.3",
     "react-sticky": "^6.0.3"
