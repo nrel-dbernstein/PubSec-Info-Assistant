@@ -27,6 +27,13 @@ import { InfoContent } from "../../components/InfoContent/InfoContent";
 import { FolderPicker } from "../../components/FolderPicker";
 import { TagPickerInline } from "../../components/TagPicker";
 import React from "react";
+import {
+    SpeechRecognizer,
+    ResultReason,
+  } from "microsoft-cognitiveservices-speech-sdk";
+  import { multiLingualSpeechRecognizer } from "../../components/SpeechToText/SpeechToText";
+  import { speakAnswer } from "../../components/TextToSpeech/TextToSpeech";
+
 
 const Chat = () => {
     const [isConfigPanelOpen, setIsConfigPanelOpen] = useState(false);

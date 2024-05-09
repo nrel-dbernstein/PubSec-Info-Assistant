@@ -1,7 +1,7 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import { Stack, IconButton } from "@fluentui/react";
 import { ShieldCheckmark20Regular } from '@fluentui/react-icons';
 import DOMPurify from "dompurify";
@@ -12,6 +12,7 @@ import { Approaches, ChatResponse, getCitationFilePath, ChatMode } from "../../a
 import { parseAnswerToHtml } from "./AnswerParser";
 import { AnswerIcon } from "./AnswerIcon";
 import { RAIPanel } from "../RAIPanel";
+import { speakAnswer } from "../TextToSpeech/TextToSpeech";
 
 interface Props {
     answer: ChatResponse;
@@ -50,6 +51,11 @@ export const Answer = ({
 
     const sanitizedAnswerHtml = DOMPurify.sanitize(parsedAnswer.answerHtml);
 
+    // Call generateAnswer when appropriate (e.g., in a useEffect or in response to a user action)
+    useEffect(() => {
+        speakAnswer(sanitizedAnswerHtml);
+    }, []);
+    
     return (
         <Stack className={`${answer.approach == Approaches.ReadRetrieveRead ? styles.answerContainerWork : 
                             answer.approach == Approaches.ChatWebRetrieveRead ? styles.answerContainerWeb :
