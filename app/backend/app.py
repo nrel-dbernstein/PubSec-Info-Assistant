@@ -882,13 +882,15 @@ def speech_config():
             headers={
                 "Ocp-Apim-Subscription-Key": speech_key,
             },
+            timeout=10
         )
 
         if response.status_code == 200:
+            languages = ENV['AZURE_SPEECH_LANGUAGES'].strip('[]').replace("'", "").split(',')
             return {
                 "token": response.text,
                 "region": ENV['AZURE_SPEECH_REGION'],
-                "languages": ENV['AZURE_SPEECH_LANGUAGES'],
+                "languages": [lang.strip() for lang in languages]            
             }
         else:
             raise Exception(f"Failed to get speech token: {response.text}")
