@@ -31,7 +31,6 @@ import {
     SpeechRecognizer,
     ResultReason,
   } from "microsoft-cognitiveservices-speech-sdk";
-import { speakAnswer } from "../../components/TextToSpeech/TextToSpeech";
 
 
 const Chat = () => {
