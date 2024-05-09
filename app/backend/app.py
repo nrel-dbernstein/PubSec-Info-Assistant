@@ -5,6 +5,7 @@ from typing import Optional
 import asyncio
 #from sse_starlette.sse import EventSourceResponse
 #from starlette.responses import StreamingResponse
+import requests
 from starlette.responses import Response
 import logging
 import os
