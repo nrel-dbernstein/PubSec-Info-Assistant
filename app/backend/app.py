@@ -103,7 +103,10 @@ ENV = {
     "ENABLE_MATH_ASSISTANT": "false",
     "ENABLE_TABULAR_DATA_ASSISTANT": "false",
     "ENABLE_MULTIMEDIA": "false",
-    "MAX_CSV_FILE_SIZE": "7"
+    "MAX_CSV_FILE_SIZE": "",
+    "AZURE_SPEECH_KEY":"",
+    "AZURE_SPEECH_REGION":"",
+    "AZURE_SPEECH_LANGUAGES":""
     }
 
 for key, value in ENV.items():

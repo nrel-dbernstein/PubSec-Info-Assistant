@@ -50,10 +50,15 @@ export const Answer = ({
     const parsedAnswer = useMemo(() => parseAnswerToHtml(answer.answer, answer.approach, answer.work_citation_lookup, answer.web_citation_lookup, answer.thought_chain, onCitationClicked), [answer]);
 
     const sanitizedAnswerHtml = DOMPurify.sanitize(parsedAnswer.answerHtml);
-
-    // Call generateAnswer when appropriate (e.g., in a useEffect or in response to a user action)
-    useEffect(() => {
+    const generateAnswer = async () => {
+    
+        // Speak the answer
         speakAnswer(sanitizedAnswerHtml);
+    };
+    // Call generateAnswer when appropriate (e.g., in a useEffect or in response to a user action)
+    
+    useEffect(() => {
+        generateAnswer();
     }, []);
     
     return (
