@@ -502,6 +502,7 @@ export async function getFeatureFlags(): Promise<GetFeatureFlagsResponse> {
     console.log(parsedResponse);
     return parsedResponse;
 }
+
 export async function fetchSpeechConfig(): Promise<{ token: string, region: string, languages: string[]; }> {
     try {
         const response = await fetch("/api/speech",  {

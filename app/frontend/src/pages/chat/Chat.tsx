@@ -31,6 +31,7 @@ import {
     SpeechRecognizer,
     ResultReason,
   } from "microsoft-cognitiveservices-speech-sdk";
+  import { multiLingualSpeechRecognizer } from "../../components/SpeechToText/SpeechToText";
 
 
 const Chat = () => {
@@ -44,7 +45,7 @@ const Chat = () => {
     // It must match a valid value of one of the buttons in the ResponseLengthButtonGroup.tsx file. 
     // If you update the default value here, you must also update the default value in the onResponseLengthChange method.
     const [responseLength, setResponseLength] = useState<number>(2048);
-
+    const [userMessage, setUserMessage] = useState("");
     // Setting responseTemp to 0.6 by default, this will effect the default display of the ResponseTempButtonGroup below.
     // It must match a valid value of one of the buttons in the ResponseTempButtonGroup.tsx file.
     // If you update the default value here, you must also update the default value in the onResponseTempChange method.
@@ -73,6 +74,10 @@ const Chat = () => {
 
     const [selectedAnswer, setSelectedAnswer] = useState<number>(0);
     const [answers, setAnswers] = useState<[user: string, response: ChatResponse][]>([]);
+    const [recognizedText, setRecognizedText] = useState<string>("");
+    const [isRecognizing, setIsRecognizing] = useState(false);
+    const [isListening, setIsListening] = useState(false);
+    const recognizerRef = useRef<SpeechRecognizer | null>(null);
 
     async function fetchFeatureFlags() {
         try {
@@ -83,6 +88,7 @@ const Chat = () => {
             console.log(error);
         }
     }
+
 
     const makeApiRequest = async (question: string, approach: Approaches, 
                                 work_citation_lookup: { [key: string]: { citation: string; source_path: string; page_number: string } },
@@ -142,6 +148,51 @@ const Chat = () => {
         setActiveAnalysisPanelTab(undefined);
         setAnswers([]);
     };
+    const startSpeechRecognition = async () => {
+        if (!isRecognizing) {
+          setIsRecognizing(true);
+    
+          recognizerRef.current = await multiLingualSpeechRecognizer(); // Store the recognizer in the ref
+          
+          recognizerRef.current.recognized = (s, e) => {
+            if (e.result.reason === ResultReason.RecognizedSpeech) {
+              const recognized = e.result.text;
+              setUserMessage(recognized);
+              setRecognizedText(recognized);
+            }
+          };
+    
+          recognizerRef.current.startContinuousRecognitionAsync(() => {
+            setIsRecognizing(true);
+            setIsListening(true);
+          });
+        }
+      };
+    const stopSpeechRecognition = () => {
+        if (isRecognizing) {
+          console.log("Stopping continuous recognition...");
+          if (recognizerRef.current) {
+            recognizerRef.current.stopContinuousRecognitionAsync(() => {
+              console.log("Speech recognition stopped.");
+              recognizerRef.current?.close();
+            });
+          }
+          setIsRecognizing(false);
+          setRecognizedText("");
+          setIsListening(false);
+        }
+      };
+    
+      const onMicrophoneClick = async () => {
+        if (!isRecognizing) {
+          console.log("Starting speech recognition...");
+          await startSpeechRecognition();
+        } else {
+          // console.log("Stopping speech recognition...");
+          stopSpeechRecognition();
+          setRecognizedText(userMessage);
+        }
+      };
 
     const onResponseLengthChange = (_ev: any) => {
         for (let node of _ev.target.parentNode.childNodes) {
@@ -422,7 +473,13 @@ const Chat = () => {
                             showClearChat={true}
                             onClearClick={clearChat}
                             onRegenerateClick={() => makeApiRequest(lastQuestionRef.current, defaultApproach, {}, {}, {})}
-                        />
+                            onMicrophoneClick={onMicrophoneClick}
+                            onStopClick={stopSpeechRecognition}
+                            recognizedText={recognizedText}
+                            isListening={isListening}
+                            isRecognizing={isRecognizing}
+                            setRecognizedText={setRecognizedText}
+                                        />
                     </div>
                 </div>
 
