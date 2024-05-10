@@ -864,21 +864,22 @@ async def get_feature_flags():
 @app.get("/api/speech")
 def speech_config():
     try:
-        # speech_key = env_helper.AZURE_SPEECH_KEY or get_speech_key(env_helper)
         speech_key = ENV["AZURE_SPEECH_KEY"]
         response = requests.post(
             f"https://{ENV['AZURE_SPEECH_REGION']}.api.cognitive.microsoft.com/sts/v1.0/issueToken",
             headers={
                 "Ocp-Apim-Subscription-Key": speech_key,
-            },
-            timeout=10
+            }
         )
 
         if response.status_code == 200:
             languages = ENV['AZURE_SPEECH_LANGUAGES'].strip('[]').replace("'", "").split(',')
+            region = ENV['AZURE_SPEECH_REGION']
+            print(f"Region: {region}")
+            print(f"Languages: {languages}")
             return {
                 "token": response.text,
-                "region": ENV['AZURE_SPEECH_REGION'],
+                "region": region,
                 "languages": [lang.strip() for lang in languages]            
             }
         else:

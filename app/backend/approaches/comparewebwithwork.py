@@ -6,7 +6,6 @@ import re
 import urllib.parse
 from typing import Any, Sequence
 import openai
-from openai import AzureOpenAI
 from openai import  AsyncAzureOpenAI
 from approaches.chatreadretrieveread import ChatReadRetrieveReadApproach
 from approaches.approach import Approach
