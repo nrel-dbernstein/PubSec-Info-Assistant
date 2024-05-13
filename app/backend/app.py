@@ -873,7 +873,7 @@ def speech_config():
         )
 
         if response.status_code == 200:
-            languages = ENV['AZURE_SPEECH_LANGUAGES'].strip('[]').replace("'", "").split(',')
+            languages = ENV['AZURE_SPEECH_LANGUAGES'].strip('[]').replace("\"", "").replace("'", "").split(',')
             region = ENV['AZURE_SPEECH_REGION']
             print(f"Region: {region}")
             print(f"Languages: {languages}")

@@ -51,9 +51,10 @@ export const Answer = ({
 
     const sanitizedAnswerHtml = DOMPurify.sanitize(parsedAnswer.answerHtml);
     const generateAnswer = async () => {
-    
+        
         // Speak the answer
-        speakAnswer(sanitizedAnswerHtml);
+        let spokenAnswer = answer.answer.replace(/\[.*?\]/g,'').trim()
+        speakAnswer(spokenAnswer);
     };
     // Call generateAnswer when appropriate (e.g., in a useEffect or in response to a user action)
     
