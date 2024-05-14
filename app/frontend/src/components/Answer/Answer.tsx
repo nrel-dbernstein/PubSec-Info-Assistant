@@ -29,6 +29,7 @@ interface Props {
     onAdjustClick?: () => void;
     onRegenerateClick?: () => void;
     chatMode: ChatMode;
+    speakResponses?: boolean;
 }
 
 export const Answer = ({
@@ -45,7 +46,8 @@ export const Answer = ({
     showFollowupQuestions,
     onAdjustClick,
     onRegenerateClick,
-    chatMode
+    chatMode,
+    speakResponses
 }: Props) => {
     const parsedAnswer = useMemo(() => parseAnswerToHtml(answer.answer, answer.approach, answer.work_citation_lookup, answer.web_citation_lookup, answer.thought_chain, onCitationClicked), [answer]);
 
@@ -54,7 +56,10 @@ export const Answer = ({
         
         // Speak the answer
         let spokenAnswer = answer.answer.replace(/\[.*?\]/g,'').trim()
-        speakAnswer(spokenAnswer);
+        if (speakResponses) {
+            speakAnswer(spokenAnswer);
+        } 
+       
     };
     // Call generateAnswer when appropriate (e.g., in a useEffect or in response to a user action)
     

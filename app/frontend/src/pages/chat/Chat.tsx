@@ -32,6 +32,7 @@ import {
     ResultReason,
   } from "microsoft-cognitiveservices-speech-sdk";
   import { multiLingualSpeechRecognizer } from "../../components/SpeechToText/SpeechToText";
+import { SpeakResponse } from "../../components/Speak Response/SpeakResponse";
 
 
 const Chat = () => {
@@ -193,7 +194,11 @@ const Chat = () => {
           setRecognizedText(userMessage);
         }
       };
+      const [speakResponse, setSpeakResponse] = useState(false);
 
+      const handleSpeechToggle = () => {
+          setSpeakResponse(!speakResponse);
+      };
     const onResponseLengthChange = (_ev: any) => {
         for (let node of _ev.target.parentNode.childNodes) {
             if (node.value == _ev.target.value) {
@@ -426,6 +431,7 @@ const Chat = () => {
                                             onRagCompareClicked={() => makeApiRequest(answers[index][0], Approaches.CompareWebWithWork, answer[1].work_citation_lookup, answer[1].web_citation_lookup, answer[1].thought_chain)}
                                             onRagSearchClicked={() => makeApiRequest(answers[index][0], Approaches.ReadRetrieveRead, answer[1].work_citation_lookup, answer[1].web_citation_lookup, answer[1].thought_chain)}
                                             chatMode={activeChatMode}
+                                            speakResponses={speakResponse}
                                         />
                                     </div>
                                 </div>
@@ -536,6 +542,7 @@ const Chat = () => {
                     <TextField className={styles.chatSettingsSeparator} defaultValue={userPersona} label="User Persona" onChange={onUserPersonaChange} />
                     <TextField className={styles.chatSettingsSeparator} defaultValue={systemPersona} label="System Persona" onChange={onSystemPersonaChange} />
                     <ResponseLengthButtonGroup className={styles.chatSettingsSeparator} onClick={onResponseLengthChange} defaultValue={responseLength} />
+                    <SpeakResponse onToggle={handleSpeechToggle} speakResponse={speakResponse} />
                     <ResponseTempButtonGroup className={styles.chatSettingsSeparator} onClick={onResponseTempChange} defaultValue={responseTemp} />
                     {activeChatMode != ChatMode.Ungrounded &&
                         <div>
