@@ -501,12 +501,6 @@ variable "maxCsvFileSize" {
   type    = string
   default = "20"
 }
-variable "azureSpeechKey" {
-  type = string
-}
-variable "azureSpeechRegion" {
-  type = string
-}
 variable "azureSpeechLanguages" {
   type = string
 }

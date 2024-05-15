@@ -104,8 +104,6 @@ ENV = {
     "ENABLE_TABULAR_DATA_ASSISTANT": "false",
     "ENABLE_MULTIMEDIA": "false",
     "MAX_CSV_FILE_SIZE": "",
-    "AZURE_SPEECH_KEY": "",
-    "AZURE_SPEECH_REGION": "",
     "AZURE_SPEECH_LANGUAGES": ""
     }
 
@@ -864,9 +862,9 @@ async def get_feature_flags():
 @app.get("/api/speech")
 def speech_config():
     try:
-        speech_key = ENV["AZURE_SPEECH_KEY"]
+        speech_key = ENV["ENRICHMENT_KEY"]
         response = requests.post(
-            f"https://{ENV['AZURE_SPEECH_REGION']}.api.cognitive.microsoft.com/sts/v1.0/issueToken",
+            f"https://{ENV['LOCATION']}.api.cognitive.microsoft.com/sts/v1.0/issueToken",
             headers={
                 "Ocp-Apim-Subscription-Key": speech_key,
             }
@@ -874,7 +872,7 @@ def speech_config():
 
         if response.status_code == 200:
             languages = ENV['AZURE_SPEECH_LANGUAGES'].strip('[]').replace("\"", "").replace("'", "").split(',')
-            region = ENV['AZURE_SPEECH_REGION']
+            region = ENV['LOCATION']
             print(f"Region: {region}")
             print(f"Languages: {languages}")
             return {

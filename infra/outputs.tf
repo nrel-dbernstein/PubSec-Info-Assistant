@@ -189,12 +189,6 @@ output "AZURE_ARM_MANAGEMENT_API" {
 output "MAX_CSV_FILE_SIZE" {
   value = var.maxCsvFileSize
 }
-output "AZURE_SPEECH_KEY" {
-  value = var.azureSpeechKey
-}
-output "AZURE_SPEECH_REGION" {
-  value = var.azureSpeechRegion
-}
 output "AZURE_SPEECH_LANGUAGES" {
   value = var.azureSpeechLanguages
 }
