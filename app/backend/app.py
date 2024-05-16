@@ -104,7 +104,8 @@ ENV = {
     "ENABLE_TABULAR_DATA_ASSISTANT": "false",
     "ENABLE_MULTIMEDIA": "false",
     "MAX_CSV_FILE_SIZE": "",
-    "AZURE_SPEECH_LANGUAGES": ""
+    "AZURE_SPEECH_LANGUAGES": "",
+    "LOCATION": ""
     }
 
 for key, value in ENV.items():
