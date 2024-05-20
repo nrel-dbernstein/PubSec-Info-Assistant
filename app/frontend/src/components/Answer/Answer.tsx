@@ -4,7 +4,6 @@
 import { useEffect, useMemo } from "react";
 import { Stack, IconButton } from "@fluentui/react";
 import { ShieldCheckmark20Regular } from '@fluentui/react-icons';
-import DOMPurify from "dompurify";
 
 import styles from "./Answer.module.css";
 
@@ -13,6 +12,10 @@ import { parseAnswerToHtml } from "./AnswerParser";
 import { AnswerIcon } from "./AnswerIcon";
 import { RAIPanel } from "../RAIPanel";
 import { speakAnswer } from "../TextToSpeech/TextToSpeech";
+import CharacterStreamer from "../CharacterStreamer/CharacterStreamer";
+import ReactMarkdown from "react-markdown";
+import rehypeSanitize from "rehype-sanitize";
+import rehypeRaw from "rehype-raw";
 
 interface Props {
     answer: ChatResponse;
@@ -29,6 +32,9 @@ interface Props {
     onAdjustClick?: () => void;
     onRegenerateClick?: () => void;
     chatMode: ChatMode;
+    answerStream: ReadableStream | undefined;
+    setAnswer?: (data: ChatResponse) => void;
+    setError?: (data: string) => void;
     speakResponses?: boolean;
 }
 
@@ -47,11 +53,13 @@ export const Answer = ({
     onAdjustClick,
     onRegenerateClick,
     chatMode,
-    speakResponses
+    speakResponses,
+    answerStream,
+    setAnswer,
+    setError
 }: Props) => {
     const parsedAnswer = useMemo(() => parseAnswerToHtml(answer.answer, answer.approach, answer.work_citation_lookup, answer.web_citation_lookup, answer.thought_chain, onCitationClicked), [answer]);
 
-    const sanitizedAnswerHtml = DOMPurify.sanitize(parsedAnswer.answerHtml);
     const generateAnswer = async () => {
         
         // Speak the answer
@@ -107,7 +115,16 @@ export const Answer = ({
                         <ShieldCheckmark20Regular></ShieldCheckmark20Regular>Your personal and company data are protected
                     </div>
                 }
-                <div className={answer.approach == Approaches.GPTDirect ? styles.answerTextUngrounded : styles.answerText} dangerouslySetInnerHTML={{ __html: sanitizedAnswerHtml }}></div>
+                { answer.answer && <div className={answer.approach == Approaches.GPTDirect ? styles.answerTextUngrounded : styles.answerText}><ReactMarkdown children={parsedAnswer.answerHtml} rehypePlugins={[rehypeRaw, rehypeSanitize]}></ReactMarkdown></div> }
+                {!answer.answer && <CharacterStreamer 
+                    classNames={answer.approach == Approaches.GPTDirect ? styles.answerTextUngrounded : styles.answerText} 
+                    approach={answer.approach} 
+                    readableStream={answerStream} 
+                    setAnswer={setAnswer} 
+                    onStreamingComplete={() => {}} 
+                    typingSpeed={10} 
+                    setError={setError}
+                    /> }
             </Stack.Item>
 
             {(parsedAnswer.approach == Approaches.ChatWebRetrieveRead && !!parsedAnswer.web_citations.length) && (
@@ -226,9 +243,9 @@ export const Answer = ({
             <Stack.Item>
                 <div className={styles.raiwarning}>AI-generated content may be incorrect</div>
             </Stack.Item>
-            <Stack.Item align="center">
+            {answer.answer && <Stack.Item align="center">
                 <RAIPanel approach={answer.approach} chatMode={chatMode} onAdjustClick={onAdjustClick} onRegenerateClick={onRegenerateClick} onWebSearchClicked={onWebSearchClicked} onWebCompareClicked={onWebCompareClicked} onRagCompareClicked={onRagCompareClicked} onRagSearchClicked={onRagSearchClicked} />
-            </Stack.Item>
+            </Stack.Item>}
         </Stack>
     );
 };

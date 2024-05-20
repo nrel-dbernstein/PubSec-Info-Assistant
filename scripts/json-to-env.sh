@@ -130,6 +130,10 @@ jq -r  '
         {
             "path": "AZURE_SPEECH_LANGUAGES",
             "env_var": "AZURE_SPEECH_LANGUAGES"
+        },
+        {
+            "path": "SERVICE_MANAGEMENT_REFERENCE",
+            "env_var": "SERVICE_MANAGEMENT_REFERENCE"
         }
     ]
         as $env_vars_to_extract

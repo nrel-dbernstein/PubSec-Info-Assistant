@@ -504,3 +504,7 @@ variable "maxCsvFileSize" {
 variable "azureSpeechLanguages" {
   type = string
 }
+variable "serviceManagementReference" {
+  type    = string
+  default = ""
+}
