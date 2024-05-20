@@ -503,6 +503,7 @@ variable "maxCsvFileSize" {
 }
 variable "azureSpeechLanguages" {
   type = string
+  default = "[\"en-US\"]"
 }
 variable "serviceManagementReference" {
   type    = string

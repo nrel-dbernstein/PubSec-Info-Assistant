@@ -86,7 +86,7 @@ ENABLE_DEV_CODE | No | Defaults to `false`. It is not recommended to enable this
 APPLICATION_TITLE | No | Defaults to "". Providing a value for this parameter will replace the Information Assistant's title in the black banner at the top of the UX.
 MAX_CSV_FILE_SIZE | No | Defaults to 20 (MB's) for the maximum file size for an uploaded CSV
 SERVICE_MANAGEMENT_REFERENCE | No | Defaults to "". Sets the service management reference value on Azure Entra objects created by Information Assistant if required by your organization.
-
+AZURE_SPEECH_LANGUAGES | No | Defaults to '["en-US"]'. Sets the preferred language for text to speech, if enabled. Currently only English is supported.
 
 ## Log into Azure using the Azure CLI
 
