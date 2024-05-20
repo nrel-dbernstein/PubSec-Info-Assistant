@@ -865,8 +865,6 @@ def speech_config():
         if response.status_code == 200:
             languages = ENV['AZURE_SPEECH_LANGUAGES'].strip('[]').replace("\"", "").replace("'", "").split(',')
             region = ENV['LOCATION']
-            print(f"Region: {region}")
-            print(f"Languages: {languages}")
             return {
                 "token": response.text,
                 "region": region,
