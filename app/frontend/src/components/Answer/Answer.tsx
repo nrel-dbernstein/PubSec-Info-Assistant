@@ -11,7 +11,6 @@ import { Approaches, ChatResponse, getCitationFilePath, ChatMode } from "../../a
 import { parseAnswerToHtml } from "./AnswerParser";
 import { AnswerIcon } from "./AnswerIcon";
 import { RAIPanel } from "../RAIPanel";
-import { speakAnswer } from "../TextToSpeech/TextToSpeech";
 import CharacterStreamer from "../CharacterStreamer/CharacterStreamer";
 import ReactMarkdown from "react-markdown";
 import rehypeSanitize from "rehype-sanitize";
@@ -35,7 +34,6 @@ interface Props {
     answerStream: ReadableStream | undefined;
     setAnswer?: (data: ChatResponse) => void;
     setError?: (data: string) => void;
-    speakResponses?: boolean;
 }
 
 export const Answer = ({
@@ -53,28 +51,12 @@ export const Answer = ({
     onAdjustClick,
     onRegenerateClick,
     chatMode,
-    speakResponses,
     answerStream,
     setAnswer,
     setError
 }: Props) => {
     const parsedAnswer = useMemo(() => parseAnswerToHtml(answer.answer, answer.approach, answer.work_citation_lookup, answer.web_citation_lookup, answer.thought_chain, onCitationClicked), [answer]);
 
-    const generateAnswer = async () => {
-        
-        // Speak the answer
-        let spokenAnswer = answer.answer.replace(/\[.*?\]/g,'').trim()
-        if (speakResponses) {
-            speakAnswer(spokenAnswer);
-        } 
-       
-    };
-    // Call generateAnswer when appropriate (e.g., in a useEffect or in response to a user action)
-    
-    useEffect(() => {
-        generateAnswer();
-    }, []);
-    
     return (
         <Stack className={`${answer.approach == Approaches.ReadRetrieveRead ? styles.answerContainerWork : 
                             answer.approach == Approaches.ChatWebRetrieveRead ? styles.answerContainerWeb :

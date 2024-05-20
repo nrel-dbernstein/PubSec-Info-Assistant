@@ -33,6 +33,7 @@ import {
   } from "microsoft-cognitiveservices-speech-sdk";
   import { multiLingualSpeechRecognizer } from "../../components/SpeechToText/SpeechToText";
 import { SpeakResponse } from "../../components/Speak Response/SpeakResponse";
+import TextToSpeech from "../../components/TextToSpeech/TextToSpeech";
 
 
 const Chat = () => {
@@ -81,6 +82,8 @@ const Chat = () => {
     const recognizerRef = useRef<SpeechRecognizer | null>(null);
     const [answerStream, setAnswerStream] = useState<ReadableStream | undefined>(undefined);
     const [abortController, setAbortController] = useState<AbortController | undefined>(undefined);
+    const [speakResponse, setSpeakResponse] = useState(false);
+    const [textToSpeech, setTextToSpeech] = useState<TextToSpeech | null>(null);
 
     async function fetchFeatureFlags() {
         try {
@@ -206,21 +209,31 @@ const Chat = () => {
         }
       };
     
-      const onMicrophoneClick = async () => {
-        if (!isRecognizing) {
-          console.log("Starting speech recognition...");
-          await startSpeechRecognition();
-        } else {
-          // console.log("Stopping speech recognition...");
-          stopSpeechRecognition();
-          setRecognizedText(userMessage);
-        }
-      };
-      const [speakResponse, setSpeakResponse] = useState(false);
+    const onMicrophoneClick = async () => {
+    if (!isRecognizing) {
+        console.log("Starting speech recognition...");
+        await startSpeechRecognition();
+    } else {
+        // console.log("Stopping speech recognition...");
+        stopSpeechRecognition();
+        setRecognizedText(userMessage);
+    }
+    };
 
-      const handleSpeechToggle = () => {
-          setSpeakResponse(!speakResponse);
-      };
+    const handleSpeechToggle = () => {
+        setSpeakResponse(!speakResponse);
+    };
+
+    const playTextToSpeech = async (answer: string) => {
+        if (answer) { // Ensure our answer isn't blank
+            // Speak the answer
+            let spokenAnswer = answer.replace(/\[.*?\]/g,'').trim()
+            if (speakResponse) {
+                textToSpeech?.startTextToSpeech(spokenAnswer);
+            } 
+        }
+    };
+
     const onResponseLengthChange = (_ev: any) => {
         for (let node of _ev.target.parentNode.childNodes) {
             if (node.value == _ev.target.value) {
@@ -375,6 +388,9 @@ const Chat = () => {
     }
 
     useEffect(() => {
+        const tts = new TextToSpeech();
+        tts.initialize();
+        setTextToSpeech(tts);
         // Hide Scrollbar for this page
         document.body.classList.add('chat-overflow-hidden-body');
         // Do not apply to other pages
@@ -389,6 +405,7 @@ const Chat = () => {
             updatedAnswers[index] = [updatedAnswers[index][0], response];
             return updatedAnswers;
         });
+        playTextToSpeech(response.answer);
     }
 
     const removeAnswerAtIndex = (index: number) => {
@@ -470,7 +487,6 @@ const Chat = () => {
                                             onRagCompareClicked={() => makeApiRequest(answers[index][0], Approaches.CompareWebWithWork, answer[1].work_citation_lookup, answer[1].web_citation_lookup, answer[1].thought_chain)}
                                             onRagSearchClicked={() => makeApiRequest(answers[index][0], Approaches.ReadRetrieveRead, answer[1].work_citation_lookup, answer[1].web_citation_lookup, answer[1].thought_chain)}
                                             chatMode={activeChatMode}
-                                            speakResponses={speakResponse}
                                         />
                                     </div>
                                 </div>
