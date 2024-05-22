@@ -488,8 +488,7 @@ const Chat = () => {
                                             onRagCompareClicked={() => makeApiRequest(answers[index][0], Approaches.CompareWebWithWork, answer[1].work_citation_lookup, answer[1].web_citation_lookup, answer[1].thought_chain)}
                                             onRagSearchClicked={() => makeApiRequest(answers[index][0], Approaches.ReadRetrieveRead, answer[1].work_citation_lookup, answer[1].web_citation_lookup, answer[1].thought_chain)}
                                             chatMode={activeChatMode}
-                                            isSpeaking={isSpeaking}
-                                            setIsSpeaking={setIsSpeaking}
+                                            speakResponses={speakResponse}
                                         />
                                     </div>
                                 </div>
