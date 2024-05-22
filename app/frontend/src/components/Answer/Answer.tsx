@@ -34,6 +34,8 @@ interface Props {
     answerStream: ReadableStream | undefined;
     setAnswer?: (data: ChatResponse) => void;
     setError?: (data: string) => void;
+    isSpeaking: boolean;
+    setIsSpeaking: (isSpeaking: boolean) => void;
 }
 
 export const Answer = ({
@@ -53,7 +55,9 @@ export const Answer = ({
     chatMode,
     answerStream,
     setAnswer,
-    setError
+    setError,
+    isSpeaking,
+    setIsSpeaking
 }: Props) => {
     const parsedAnswer = useMemo(() => parseAnswerToHtml(answer.answer, answer.approach, answer.work_citation_lookup, answer.web_citation_lookup, answer.thought_chain, onCitationClicked), [answer]);
 
@@ -226,7 +230,7 @@ export const Answer = ({
                 <div className={styles.raiwarning}>AI-generated content may be incorrect</div>
             </Stack.Item>
             {answer.answer && <Stack.Item align="center">
-                <RAIPanel approach={answer.approach} chatMode={chatMode} onAdjustClick={onAdjustClick} onRegenerateClick={onRegenerateClick} onWebSearchClicked={onWebSearchClicked} onWebCompareClicked={onWebCompareClicked} onRagCompareClicked={onRagCompareClicked} onRagSearchClicked={onRagSearchClicked} />
+                <RAIPanel approach={answer.approach} chatMode={chatMode} onAdjustClick={onAdjustClick} onRegenerateClick={onRegenerateClick} onWebSearchClicked={onWebSearchClicked} onWebCompareClicked={onWebCompareClicked} onRagCompareClicked={onRagCompareClicked} onRagSearchClicked={onRagSearchClicked} isInAnswer={true} generateAnswer={generateAnswer} speakResponses={!!speakResponses} isSpeaking={isSpeaking} />
             </Stack.Item>}
         </Stack>
     );

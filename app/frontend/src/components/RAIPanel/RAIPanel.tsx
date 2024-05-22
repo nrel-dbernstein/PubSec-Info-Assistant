@@ -1,7 +1,7 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
 
-import { Options16Filled, ArrowSync16Filled, Briefcase16Filled, Globe16Filled, BuildingMultipleFilled } from "@fluentui/react-icons";
+import { Options16Filled, ArrowSync16Filled, Briefcase16Filled, Globe16Filled, BuildingMultipleFilled,DesktopSpeakerFilled } from "@fluentui/react-icons";
 
 import styles from "./RAIPanel.module.css";
 import { Icon } from "@fluentui/react";
@@ -16,9 +16,13 @@ interface Props {
     onRagSearchClicked?: () => void;
     onWebCompareClicked?: () => void;
     onRagCompareClicked?: () => void;
+    isInAnswer?: boolean;
+    generateAnswer?: () => void;
+    speakResponses?: boolean;
+    isSpeaking?: boolean;
 }
 
-export const RAIPanel = ({approach, chatMode, onAdjustClick, onRegenerateClick, onWebSearchClicked, onRagSearchClicked, onWebCompareClicked, onRagCompareClicked }: Props) => {
+export const RAIPanel = ({approach, chatMode, onAdjustClick, onRegenerateClick, onWebSearchClicked, onRagSearchClicked, onWebCompareClicked, onRagCompareClicked, isInAnswer,generateAnswer, speakResponses, isSpeaking }: Props) => {
     return (
         <div className={styles.adjustInputContainer}>
             <div className={styles.adjustInput} onClick={onAdjustClick}>
@@ -29,6 +33,10 @@ export const RAIPanel = ({approach, chatMode, onAdjustClick, onRegenerateClick, 
                 <ArrowSync16Filled primaryFill="rgba(133, 133, 133, 1)" />
                 <span className={styles.adjustInputText}>Regenerate</span>
             </div>
+            {isInAnswer && speakResponses && <div className={styles.adjustInput} onClick={() => { if (!isSpeaking && generateAnswer) generateAnswer(); }}>
+                <DesktopSpeakerFilled primaryFill="rgba(133, 133, 133, 1)" />
+                <span className={styles.adjustInputText}>Speak Response</span>
+            </div>}
             {(approach == Approaches.ChatWebRetrieveRead && chatMode == ChatMode.WorkPlusWeb) &&
                     <>
                         <div className={styles.adjustInput} onClick={onRagSearchClicked}>

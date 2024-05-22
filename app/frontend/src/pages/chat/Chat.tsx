@@ -37,6 +37,7 @@ import TextToSpeech from "../../components/TextToSpeech/TextToSpeech";
 
 
 const Chat = () => {
+    const [isSpeaking, setIsSpeaking] = useState(false);
     const [isConfigPanelOpen, setIsConfigPanelOpen] = useState(false);
     const [isInfoPanelOpen, setIsInfoPanelOpen] = useState(false);
     const [retrieveCount, setRetrieveCount] = useState<number>(5);
@@ -487,6 +488,8 @@ const Chat = () => {
                                             onRagCompareClicked={() => makeApiRequest(answers[index][0], Approaches.CompareWebWithWork, answer[1].work_citation_lookup, answer[1].web_citation_lookup, answer[1].thought_chain)}
                                             onRagSearchClicked={() => makeApiRequest(answers[index][0], Approaches.ReadRetrieveRead, answer[1].work_citation_lookup, answer[1].web_citation_lookup, answer[1].thought_chain)}
                                             chatMode={activeChatMode}
+                                            isSpeaking={isSpeaking}
+                                            setIsSpeaking={setIsSpeaking}
                                         />
                                     </div>
                                 </div>
@@ -504,6 +507,7 @@ const Chat = () => {
                     )}
                     
                     <div className={styles.chatInput}>
+                    <div className={styles.warningMessagesContainer}>
                         {activeChatMode == ChatMode.WorkPlusWeb && (
                             <div className={styles.chatInputWarningMessage}> 
                                 {defaultApproach == Approaches.ReadRetrieveRead && 
@@ -511,8 +515,12 @@ const Chat = () => {
                                 {defaultApproach == Approaches.ChatWebRetrieveRead && 
                                     <div>Questions will be answered by default from Web <GlobeFilled fontSize={"20px"} primaryFill={"rgba(24, 141, 69, 1)"} aria-hidden="true" aria-label="Web Data" /></div>
                                 }
-                            </div> 
+                            </div>  
                         )}
+                         <div className={styles.chatInputWarningMessage}> 
+                                {speakResponse && <div>Speech response is enabled</div>}
+                            </div> 
+                        </div>
                         <QuestionInput
                             clearOnSend
                             placeholder="Type a new question (e.g. Who are Microsoft's top executives, provided as a table?)"
@@ -529,7 +537,7 @@ const Chat = () => {
                             isListening={isListening}
                             isRecognizing={isRecognizing}
                             setRecognizedText={setRecognizedText}
-                                        />
+                        />
                     </div>
                 </div>
 

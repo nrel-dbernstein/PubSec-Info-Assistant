@@ -212,3 +212,9 @@
         bottom: 8px;
     }
 }
+.warningMessagesContainer {
+    display: flex;
+    flex-direction: column; /* changed from row to column */
+    justify-content: flex-end;
+    gap: 10px; /* adjust this to add space between messages */
+}
