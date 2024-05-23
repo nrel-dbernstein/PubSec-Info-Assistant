@@ -197,7 +197,7 @@
     color: #858585;
     line-height: 22px;
     padding-top: 6px;
-    padding-bottom: 6px;
+    padding-bottom: 2px;
     white-space: pre-line;
     display: flex;
     align-items: center;
@@ -205,6 +205,22 @@
     position: absolute;
     bottom: 23px;
     right: 40px;
+}
+
+.chatSpeechMessage{
+    font-size: 12px;
+    font-weight: 400;
+    color: #858585;
+    line-height: 22px;
+    padding-top: 6px;
+    padding-bottom: 2px;
+    white-space: pre-line;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    position: absolute;
+    bottom: 23px;
+    left: 40px;
 }
 
 @media (max-width: 800px) {

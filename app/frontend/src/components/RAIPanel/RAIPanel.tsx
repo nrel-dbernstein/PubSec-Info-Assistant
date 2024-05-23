@@ -19,10 +19,12 @@ interface Props {
     isInAnswer?: boolean;
     generateAnswer?: () => void;
     speakResponses?: boolean;
-    isSpeaking?: boolean;
+    playTextToSpeech?: (text: string) => void;
+    fullanswer?: string;
 }
 
-export const RAIPanel = ({approach, chatMode, onAdjustClick, onRegenerateClick, onWebSearchClicked, onRagSearchClicked, onWebCompareClicked, onRagCompareClicked, isInAnswer,generateAnswer, speakResponses, isSpeaking }: Props) => {
+
+export const RAIPanel = ({approach, chatMode, onAdjustClick, onRegenerateClick, onWebSearchClicked, onRagSearchClicked, onWebCompareClicked, onRagCompareClicked, isInAnswer, speakResponses, fullanswer, playTextToSpeech }: Props) => {
     return (
         <div className={styles.adjustInputContainer}>
             <div className={styles.adjustInput} onClick={onAdjustClick}>
@@ -33,7 +35,7 @@ export const RAIPanel = ({approach, chatMode, onAdjustClick, onRegenerateClick, 
                 <ArrowSync16Filled primaryFill="rgba(133, 133, 133, 1)" />
                 <span className={styles.adjustInputText}>Regenerate</span>
             </div>
-            {isInAnswer && speakResponses && <div className={styles.adjustInput} onClick={() => { if (!isSpeaking && generateAnswer) generateAnswer(); }}>
+            {isInAnswer && speakResponses && <div className={styles.adjustInput} onClick={() => { if (playTextToSpeech && fullanswer) playTextToSpeech(fullanswer); }}>
                 <DesktopSpeakerFilled primaryFill="rgba(133, 133, 133, 1)" />
                 <span className={styles.adjustInputText}>Speak Response</span>
             </div>}

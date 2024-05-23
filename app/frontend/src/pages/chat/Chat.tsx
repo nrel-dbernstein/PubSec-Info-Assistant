@@ -4,7 +4,7 @@
 import { useRef, useState, useEffect } from "react";
 import { Checkbox, Panel, DefaultButton, TextField, SpinButton, Separator, Toggle, Label } from "@fluentui/react";
 import Switch from 'react-switch';
-import { GlobeFilled, BuildingMultipleFilled, AddFilled, ChatSparkleFilled } from "@fluentui/react-icons";
+import { GlobeFilled, BuildingMultipleFilled, AddFilled, ChatSparkleFilled, DesktopSpeakerFilled } from "@fluentui/react-icons";
 import { ITag } from '@fluentui/react/lib/Pickers';
 
 import styles from "./Chat.module.css";
@@ -489,6 +489,7 @@ const Chat = () => {
                                             onRagSearchClicked={() => makeApiRequest(answers[index][0], Approaches.ReadRetrieveRead, answer[1].work_citation_lookup, answer[1].web_citation_lookup, answer[1].thought_chain)}
                                             chatMode={activeChatMode}
                                             speakResponses={speakResponse}
+                                            playTextToSpeech={playTextToSpeech}
                                         />
                                     </div>
                                 </div>
@@ -514,11 +515,14 @@ const Chat = () => {
                                 {defaultApproach == Approaches.ChatWebRetrieveRead && 
                                     <div>Questions will be answered by default from Web <GlobeFilled fontSize={"20px"} primaryFill={"rgba(24, 141, 69, 1)"} aria-hidden="true" aria-label="Web Data" /></div>
                                 }
-                            </div>  
+                                
+                            </div>
+                             
                         )}
-                         <div className={styles.chatInputWarningMessage}> 
-                                {speakResponse && <div>Speech response is enabled</div>}
-                            </div> 
+                        <div className={styles.chatSpeechMessage}> 
+                                {speakResponse && <div>Speech response is enabled <DesktopSpeakerFilled primaryFill={"rgba(27, 74, 239, 1)"}/> </div>}
+                        </div>  
+                         
                         </div>
                         <QuestionInput
                             clearOnSend
