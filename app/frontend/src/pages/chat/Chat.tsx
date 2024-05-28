@@ -37,7 +37,6 @@ import TextToSpeech from "../../components/TextToSpeech/TextToSpeech";
 
 
 const Chat = () => {
-    const [isSpeaking, setIsSpeaking] = useState(false);
     const [isConfigPanelOpen, setIsConfigPanelOpen] = useState(false);
     const [isInfoPanelOpen, setIsInfoPanelOpen] = useState(false);
     const [retrieveCount, setRetrieveCount] = useState<number>(5);
@@ -179,7 +178,7 @@ const Chat = () => {
         if (!isRecognizing) {
           setIsRecognizing(true);
     
-          recognizerRef.current = await multiLingualSpeechRecognizer(); // Store the recognizer in the ref
+          recognizerRef.current = await multiLingualSpeechRecognizer(textToSpeech); // Store the recognizer in the ref
           
           recognizerRef.current.recognized = (s, e) => {
             if (e.result.reason === ResultReason.RecognizedSpeech) {

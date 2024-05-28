@@ -7,18 +7,17 @@ import {
 import { fetchSpeechConfig } from "../../api";
 
 
-export const multiLingualSpeechRecognizer = async () => {
-    const { token, region, languages } = await fetchSpeechConfig();
+export const multiLingualSpeechRecognizer = async (textToSpeech: any) => {
 
     const speechConfig = SpeechConfig.fromAuthorizationToken(
-      token,
-      region
+      textToSpeech.token,
+      textToSpeech.region
     );
 
     const audioConfig = AudioConfig.fromDefaultMicrophoneInput();
 
     try {
-      const autoDetectSourceLanguageConfig = AutoDetectSourceLanguageConfig.fromLanguages(languages);
+      const autoDetectSourceLanguageConfig = AutoDetectSourceLanguageConfig.fromLanguages(textToSpeech.languages);
       return SpeechRecognizer.FromConfig(speechConfig, autoDetectSourceLanguageConfig, audioConfig);
     } catch (error) {
       console.error("Using default language settings as error detected while reading language config:", error);
