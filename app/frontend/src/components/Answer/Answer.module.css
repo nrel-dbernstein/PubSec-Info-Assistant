@@ -265,3 +265,7 @@ sup {
     align-items: center;
     flex-direction: column;
 }
+
+  a:not([href])[class=""] {
+    pointer-events: none;
+}
