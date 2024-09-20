@@ -21,9 +21,6 @@ From the following locations:
 
 <https://github.com/pallets/flask/>
 
-### langchain
-
-<https://github.com/hwchase17/langchain>
 
 ### openai
 

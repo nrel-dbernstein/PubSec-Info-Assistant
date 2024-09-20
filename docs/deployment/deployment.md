@@ -83,7 +83,6 @@ ENABLE_DEV_CODE | No | Defaults to `false`. It is not recommended to enable this
 APPLICATION_TITLE | No | Defaults to "". Providing a value for this parameter will replace the Information Assistant's title in the black banner at the top of the UX.
 ENTRA_OWNERS | No | Defaults to "". Additional user id's you wish to assign as owners of created Azure Entra objects by way of assign to a security group.
 SERVICE_MANAGEMENT_REFERENCE | No | Defaults to "". Sets the service management reference value on Azure Entra objects created by Information Assistant if required by your organization.
-MAX_CSV_FILE_SIZE | Yes | Defaults to 20. This value limits the size of CSV files in MBs that will be supported for upload in the Tabular Data Assistant UX feature.
 PASSWORD_LIFETIME | No | Defaults to 365. The number of days that passwords associated with created identities are set to expire after creation. Change this setting if needed to conform to you policy requirements
 ENABLE_DDOS_PROTECTION_PLAN | Yes | Defaults to false. This setting is only used in "secure-mode" and will determine if the private vnet that is deployed is assicated to a DDOS protection plan or not. When true, this setting can be used in conjunction with `DDOS_PLAN_ID` to specify a specfic DDOS protection plan ID or if omitted the scripts will prompt during deployment to select an available DDOS protection plan.
 

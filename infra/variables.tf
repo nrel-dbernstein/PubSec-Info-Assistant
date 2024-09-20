@@ -49,15 +49,6 @@ variable "enableUngroundedChat" {
   default = false
 }
 
-variable "enableMathAssitant" {
-  type    = bool
-  default = true
-}
-
-variable "enableTabularDataAssistant" {
-  type    = bool
-  default = true
-}
 
 variable "enableSharePointConnector" {
   type    = bool

@@ -29,10 +29,6 @@ Updated 25 Mar 2024
         - [Overview](#overview)
         - [Data Preparation](#data-preparation)
         - [Prompt Engineering](#prompt-engineering)
-    - [System behavior: PREVIEW - Autonomous Agents](#system-behavior-preview---autonomous-agents)
-        - [Overview](#overview)
-        - [Math Assistant](#math-assistant)
-        - [Tabular Data Assistant](#tabular-data-assistant)
 - [Intended uses](#intended-uses)
     - [Considerations when choosing a use case](#considerations-when-choosing-a-use-case)
         - [Identity Applications](#identity-applications)
@@ -191,31 +187,6 @@ The system does no data preparation for ungrounded chat conversations.
 
 There is minimal propmt engineering provided by the system for this capability. **Fabrications are highly likely.**
 
-## System behavior: PREVIEW - Autonomous Agents
-
-### Overview
-These capabilities include tabular data processing and a math assistant which generate responses by using an LLM as a reasoning engine. The key strength lies in agent's ability to autonomously reason about tasks, decompose them into steps, and determine the appropriate tools and data sources to leverage, all without the need for predefined task definitions or rigid workflows. This approach allows for a dynamic and adaptive response generation process.
-
-These agents are being **released in preview mode as we continue to evaluate and mitigate the potential risks associated with autonomous reasoning**, such as misuse of external tools, lack of transparency, biased outputs, privacy concerns, and remote code execution vulnerabilities. With future releases, we plan to work to enhance the safety and robustness of these autonomous reasoning capabilities. Specific information on our preview agents can be found in [Autonomous Agents](/docs/features/features.md#autonomous-reasoning-with-agents).
-
-**Usage of these features MUST BE carefully evaluated.**
-
-### Math Assistant
-
-This capability leverages the LangChain technology to enable LLMs to assist with math questions. This is an experimental feature which is primarily intended for younger audiences. **Care MUST BE taken with building a solution targeted to minors. Please see the section below that discusses [age appropriatness](#age-appropriatenessexposure-to-minors)**.
-
-This capability presents several potential real harms to students in particular which should be mitigated if used in an education setting. At a minimum, this system may have the following harms:
-1) Incorrect Answers - This capability may generate incorrect answers which may have follow-on impact on a student's grades. Establishing a system verification process would be critical for use in an education setting.
-2) Incorrect process - As this capability is able to show the steps to generate an answer, there is a real possibility that it generates processes which are incorrect. This may have a follow-on impact to students who learn an incorrect process for answering similar types of math problems.
-3) Undefined resolution process - Educators should establish an agreed upon resolution process for incorrect answers and incorrect process trainings before using this capability in a production setting. This system does not capture questions or responses, and at a minimum the solution should keep records for verification of incorrect answers or incorrect process delivered to an individual student. 
-
-Note that there are several potential security concerns with LangChain and the ability for agents to enable unintended consequences. Usage of this feature should be carefully evaluated.
-
-### Tabular Data Assistant
-
-This capability leverages the LangChain technology to enable LLMs to assist with tabular data processing questions. This is an experimental feature which may provide incorrect answers, or partial answers if data is not available at the time of calculation. This feature is not a replacement for dedicated tabular data processing tools.
-
-Note that there are several potential security concerns with LangChain and the ability for agents to enable unintended consequences. Usage of this feature should be carefully evaluated.
 
 # Intended uses
 
