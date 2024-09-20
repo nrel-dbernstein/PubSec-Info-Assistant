@@ -408,9 +408,6 @@ module "webapp" {
     ENABLE_WEB_CHAT                         = var.enableWebChat
     ENABLE_BING_SAFE_SEARCH                 = var.enableBingSafeSearch
     ENABLE_UNGROUNDED_CHAT                  = var.enableUngroundedChat
-    ENABLE_MATH_ASSISTANT                   = var.enableMathAssitant
-    ENABLE_TABULAR_DATA_ASSISTANT           = var.enableTabularDataAssistant
-    MAX_CSV_FILE_SIZE                       = var.maxCsvFileSize
     AZURE_AI_CREDENTIAL_DOMAIN               = var.azure_ai_private_link_domain
   }
 

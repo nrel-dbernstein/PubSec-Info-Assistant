@@ -238,29 +238,6 @@ def test_get_tags():
     response = client.post("/gettags")
     assert response.status_code == 200
     assert isinstance(response.json(), list)
-    
-
-def test_get_hint():
-    
-    response = client.get("/getHint", params={"question": "What is 2+2?"})
-    assert response.status_code == 200
-    assert "add" in response.json().lower() or "addition" in response.json().lower()
-
-
-def test_post_td():
-    with open("test_data/parts_inventory.csv", "rb") as file:
-        response = client.post("/posttd", files={"csv": file})
-        assert response.status_code == 200
-
-def test_process_td_agent_response():
-    response = client.get("/process_td_agent_response", params={"question": "How many rows are there in this file?"})
-    assert response.status_code == 200
-    assert "200" in response.json()
-
-def test_process_agent_response():
-    response = client.get("/process_agent_response", params={"question": "What is 2+2?"})
-    assert response.status_code == 200
-    assert "4" in response.json()
 
 def test_get_info_data():
     response = client.get("/getInfoData")
@@ -286,11 +263,6 @@ def test_get_warning_banner():
     assert response.status_code == 200
     assert response.json() == {"WARNING_BANNER_TEXT": os.getenv("CHAT_WARNING_BANNER_TEXT")}
 
-def test_get_max_csv_file_size():
-    response = client.get("/getMaxCSVFileSize")
-    assert response.status_code == 200
-    assert response.json() == {"MAX_CSV_FILE_SIZE": os.getenv("MAX_CSV_FILE_SIZE")}
-
 def test_get_application_title():
     response = client.get("/getApplicationTitle")
     assert response.status_code == 200
@@ -307,10 +279,8 @@ def test_get_feature_flags():
     
     expected_response = {
         "ENABLE_WEB_CHAT": os.getenv("ENABLE_WEB_CHAT") == "true",
-        "ENABLE_UNGROUNDED_CHAT": os.getenv("ENABLE_UNGROUNDED_CHAT") == "true",
-        "ENABLE_MATH_ASSISTANT": os.getenv("ENABLE_MATH_ASSISTANT") == "true",
-        "ENABLE_TABULAR_DATA_ASSISTANT": os.getenv("ENABLE_TABULAR_DATA_ASSISTANT") == "true",
-    }
+        "ENABLE_UNGROUNDED_CHAT": os.getenv("ENABLE_UNGROUNDED_CHAT") == "true"
+        }
 
     assert response.json() == expected_response
 

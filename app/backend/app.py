@@ -25,18 +25,6 @@ from azure.identity import ManagedIdentityCredential, AzureAuthorityHosts, Defau
 from azure.mgmt.cognitiveservices import CognitiveServicesManagementClient
 from azure.search.documents import SearchClient
 from azure.storage.blob import BlobServiceClient, ContentSettings
-from approaches.mathassistant import(
-    generate_response,
-    process_agent_response,
-    stream_agent_responses
-)
-from approaches.tabulardataassistant import (
-    refreshagent,
-    save_df,
-    process_agent_response as td_agent_response,
-    process_agent_scratch_pad as td_agent_scratch_pad,
-    get_images_in_temp
-)
 from shared_code.status_log import State, StatusClassification, StatusLog
 from azure.cosmos import CosmosClient
 
@@ -86,8 +74,6 @@ ENV = {
     "ENABLE_BING_SAFE_SEARCH": "true",
     "ENABLE_WEB_CHAT": "false",
     "ENABLE_UNGROUNDED_CHAT": "false",
-    "ENABLE_MATH_ASSISTANT": "false",
-    "ENABLE_TABULAR_DATA_ASSISTANT": "false",
     "MAX_CSV_FILE_SIZE": "7",
     "LOCAL_DEBUG": "false",
     "AZURE_AI_CREDENTIAL_DOMAIN": "cognitiveservices.azure.com"
@@ -659,174 +645,6 @@ async def get_all_tags():
         raise HTTPException(status_code=500, detail=str(ex)) from ex
     return results
 
-@app.get("/getTempImages")
-async def get_temp_images():
-    """Get the images in the temp directory
-
-    Returns:
-        list: A list of image data in the temp directory.
-    """
-    images = get_images_in_temp()
-    return {"images": images}
-
-@app.get("/getHint")
-async def getHint(question: Optional[str] = None):
-    """
-    Get the hint for a question
-
-    Returns:
-        str: A string containing the hint
-    """
-    if question is None:
-        raise HTTPException(status_code=400, detail="Question is required")
-
-    try:
-        results = generate_response(question).split("Clues")[1][2:]
-    except Exception as ex:
-        log.exception("Exception in /getHint")
-        raise HTTPException(status_code=500, detail=str(ex)) from ex
-    return results
-
-@app.post("/posttd")
-async def posttd(csv: UploadFile = File(...)):
-    try:
-        global DF_FINAL
-            # Read the file into a pandas DataFrame
-        content = await csv.read()
-        df = pd.read_csv(StringIO(content.decode('utf-8-sig')))
-
-        DF_FINAL = df
-        # Process the DataFrame...
-        save_df(df)
-    except Exception as ex:
-        raise HTTPException(status_code=500, detail=str(ex)) from ex
-    
-    
-    #return {"filename": csv.filename}
-@app.get("/process_td_agent_response")
-async def process_td_agent_response(retries=3, delay=1000, question: Optional[str] = None):
-    save_df(DF_FINAL)
-    if question is None:
-        raise HTTPException(status_code=400, detail="Question is required")
-    for i in range(retries):
-        try:
-            results = td_agent_response(question,DF_FINAL)
-            return results
-        except AttributeError as ex:
-            log.exception(f"Exception in /process_tabular_data_agent_response:{str(ex)}")
-            if i < retries - 1:  # i is zero indexed
-                await asyncio.sleep(delay)  # wait a bit before trying again
-            else:
-                if str(ex) == "'NoneType' object has no attribute 'stream'":
-                    return ["error: Csv has not been loaded"]
-                else:
-                    raise HTTPException(status_code=500, detail=str(ex)) from ex
-        except Exception as ex:
-            log.exception(f"Exception in /process_tabular_data_agent_response:{str(ex)}")
-            if i < retries - 1:  # i is zero indexed
-                await asyncio.sleep(delay)  # wait a bit before trying again
-            else:
-                raise HTTPException(status_code=500, detail=str(ex)) from ex
-
-@app.get("/getTdAnalysis")
-async def getTdAnalysis(retries=3, delay=1, question: Optional[str] = None):
-    global DF_FINAL
-    if question is None:
-        raise HTTPException(status_code=400, detail="Question is required")
-        
-    for i in range(retries):
-        try:
-            save_df(DF_FINAL)
-            results = td_agent_scratch_pad(question, DF_FINAL)
-            return results
-        except AttributeError as ex:
-            log.exception(f"Exception in /getTdAnalysis:{str(ex)}")
-            if i < retries - 1:  # i is zero indexed
-                await asyncio.sleep(delay)  # wait a bit before trying again
-            else:
-                if str(ex) == "'NoneType' object has no attribute 'stream'":
-                    return ["error: Csv has not been loaded"]
-                else:
-                    raise HTTPException(status_code=500, detail=str(ex)) from ex
-        except Exception as ex:
-            log.exception(f"Exception in /getTdAnalysis:{str(ex)}")
-            if i < retries - 1:  # i is zero indexed
-                await asyncio.sleep(delay)  # wait a bit before trying again
-            else:
-                raise HTTPException(status_code=500, detail=str(ex)) from ex
-
-@app.post("/refresh")
-async def refresh():
-    """
-    Refresh the agent's state.
-
-    This endpoint calls the `refresh` function to reset the agent's state.
-
-    Raises:
-        HTTPException: If an error occurs while refreshing the agent's state.
-
-    Returns:
-        dict: A dictionary containing the status of the agent's state.
-    """
-    try:
-        refreshagent()
-    except Exception as ex:
-        log.exception("Exception in /refresh")
-        raise HTTPException(status_code=500, detail=str(ex)) from ex
-    return {"status": "success"}
-
-
-@app.get("/stream")
-async def stream_response(question: str):
-    try:
-        stream = stream_agent_responses(question)
-        return StreamingResponse(stream, media_type="text/event-stream")
-    except Exception as ex:
-        log.exception("Exception in /stream")
-        raise HTTPException(status_code=500, detail=str(ex)) from ex
-
-@app.get("/tdstream")
-async def td_stream_response(question: str):
-    save_df(DF_FINAL)
-    
-
-    try:
-        stream = td_agent_scratch_pad(question, DF_FINAL)
-        return StreamingResponse(stream, media_type="text/event-stream")
-    except Exception as ex:
-        log.exception("Exception in /stream")
-        raise HTTPException(status_code=500, detail=str(ex)) from ex
-
-
-
-
-@app.get("/process_agent_response")
-async def stream_agent_response(question: str):
-    """
-    Stream the response of the agent for a given question.
-
-    This endpoint uses Server-Sent Events (SSE) to stream the response of the agent. 
-    It calls the `process_agent_response` function which yields chunks of data as they become available.
-
-    Args:
-        question (str): The question to be processed by the agent.
-
-    Yields:
-        dict: A dictionary containing a chunk of the agent's response.
-
-    Raises:
-        HTTPException: If an error occurs while processing the question.
-    """
-    if question is None:
-        raise HTTPException(status_code=400, detail="Question is required")
-
-    try:
-        results = process_agent_response(question)
-    except Exception as e:
-        print(f"Error processing agent response: {e}")
-        raise HTTPException(status_code=500, detail=str(e)) from e
-    return results
-
 
 @app.get("/getFeatureFlags")
 async def get_feature_flags():
@@ -837,14 +655,10 @@ async def get_feature_flags():
         dict: A dictionary containing various feature flags for the app.
             - "ENABLE_WEB_CHAT": Flag indicating whether web chat is enabled.
             - "ENABLE_UNGROUNDED_CHAT": Flag indicating whether ungrounded chat is enabled.
-            - "ENABLE_MATH_ASSISTANT": Flag indicating whether the math assistant is enabled.
-            - "ENABLE_TABULAR_DATA_ASSISTANT": Flag indicating whether the tabular data assistant is enabled.
-    """
+            """
     response = {
         "ENABLE_WEB_CHAT": str_to_bool.get(ENV["ENABLE_WEB_CHAT"]),
         "ENABLE_UNGROUNDED_CHAT": str_to_bool.get(ENV["ENABLE_UNGROUNDED_CHAT"]),
-        "ENABLE_MATH_ASSISTANT": str_to_bool.get(ENV["ENABLE_MATH_ASSISTANT"]),
-        "ENABLE_TABULAR_DATA_ASSISTANT": str_to_bool.get(ENV["ENABLE_TABULAR_DATA_ASSISTANT"]),
     }
     return response
 
