@@ -1,5 +1,5 @@
 locals {
-  tags            = { ProjectName = "Information Assistant", BuildNumber = var.buildNumber }
+  tags            = { ProjectName = "Information Assistant", BuildNumber = var.buildNumber, chargecode = "10050.01.01.06", center = "3100", supportcontacts = "gocloud@nrel.gov", purpose = "Infoassist openai deployment"}
   azure_roles     = jsondecode(file("${path.module}/azure_roles.json"))
   selected_roles  = ["CognitiveServicesOpenAIUser", "StorageBlobDataReader", "StorageBlobDataContributor", "SearchIndexDataReader", "SearchIndexDataContributor"]
 }
@@ -75,7 +75,7 @@ module "enrichmentApp" {
   sku = {
     size                                    = var.enrichmentAppServiceSkuSize
     tier                                    = var.enrichmentAppServiceSkuTier
-    capacity                                = 3
+    capacity                                = 1
   }
   kind                                      = "linux"
   reserved                                  = true
@@ -303,7 +303,7 @@ module "functions" {
   sku                                   = {
     size                                = var.functionsAppSkuSize
     tier                                = var.functionsAppSkuTier
-    capacity                            = 2
+    capacity                            = 1
   }
   kind                                  = "linux"
   runtime                               = "python"

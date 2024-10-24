@@ -2,11 +2,11 @@
 # Create the web app service plan
 resource "azurerm_service_plan" "appServicePlan" {
   name                = var.plan_name
-  location            = var.location
+  location            = "eastus"
   resource_group_name = var.resourceGroupName
 
-  sku_name = var.sku["size"]
-  worker_count = var.sku["capacity"]
+  sku_name = "P0v3"
+  worker_count = "1"
   os_type = "Linux"
 
   tags = var.tags

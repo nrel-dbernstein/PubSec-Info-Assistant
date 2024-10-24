@@ -3,15 +3,16 @@
 // Create Enrichment App Service Plan 
 resource "azurerm_service_plan" "appServicePlan" {
   name                          = var.plan_name
-  location                      = var.location
+  location                      = "eastus"
   resource_group_name           = var.resourceGroupName
-  sku_name                      = var.sku["size"]
-  worker_count                  = var.sku["capacity"]
+  sku_name                      = "P0v3"    # Reduced to PremiumV2 for cost optimization
+  worker_count                  = "1"         # Minimal worker count
   os_type                       = "Linux"
   tags                          = var.tags
   per_site_scaling_enabled      = false
   zone_balancing_enabled        = false
 }
+
 
 resource "azurerm_monitor_autoscale_setting" "scaleout" {
   name                = azurerm_service_plan.appServicePlan.name
@@ -24,7 +25,7 @@ resource "azurerm_monitor_autoscale_setting" "scaleout" {
     capacity {
       default = 1
       minimum = 1
-      maximum = 5
+      maximum = 3
     }
 
     rule {
